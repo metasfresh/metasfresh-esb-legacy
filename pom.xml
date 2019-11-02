@@ -17,7 +17,7 @@
 		<servicemix.java.version>1.7</servicemix.java.version>
 
 		<!-- versions taken from http://servicemix.apache.org/downloads/servicemix-6.1.0 -->
-		<camel.version>2.16.1</camel.version>
+		<camel.version>2.24.2</camel.version>
 		<cxf.version>3.1.4</cxf.version>
 		<activeMQ.version>5.12.1</activeMQ.version>
 
