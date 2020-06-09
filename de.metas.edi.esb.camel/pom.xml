@@ -21,22 +21,6 @@
 		<jaxb.packageName>de.metas.edi.esb.jaxb</jaxb.packageName>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<!-- get the dependency management of the de.metas.esb "commons" project -->
-			<!--
-			version ranges are not supported here, also importing it is not required because its our grand parent pom
-			<dependency>
-				<groupId>de.metas.esb</groupId>
-				<artifactId>de.metas.esb</artifactId>
-				<version>10.0.0</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			-->
-		</dependencies>
-	</dependencyManagement>
-
 	<dependencies>
 		<dependency>
 			<artifactId>camel-test</artifactId>
@@ -188,10 +172,17 @@
 			in the build section below. -->
 		<!-- To install in the OSGI container (smx), do bundle:install mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.poi/3.13_1 
 			If changing the version, please make sure there is also an OSGI bundle for 
-			the new version <dependency> <groupId>org.apache.servicemix.bundles</groupId> 
-			<artifactId>org.apache.servicemix.bundles.poi</artifactId> <version>3.13_1</version> 
-			</dependency> <! a dependency of poi > <dependency> <groupId>commons-codec</groupId> 
-			<artifactId>commons-codec</artifactId> </dependency> <! Needed to avoid the 
+			the new version 
+			<dependency> 
+				<groupId>org.apache.servicemix.bundles</groupId> 
+				<artifactId>org.apache.servicemix.bundles.poi</artifactId> 
+				<version>3.13_1</version> 
+			</dependency> 
+			<! a dependency of poi > 
+			<dependency> 
+				<groupId>commons-codec</groupId> 
+				<artifactId>commons-codec</artifactId>
+			</dependency> <! Needed to avoid the 
 			following error when deploying the bundle: org.osgi.framework.BundleException: 
 			Unresolved constraint in bundle de.metas.edi.esb [254]: Unable to resolve 
 			254.0: missing requirement [254.0] package; (&(package=org.apache.poi.hssf.usermodel)(version>=3.11.0)(!(version>=4.0.0))) 
@@ -227,11 +218,12 @@
 						-->
 						<Bundle-Version>0.0.0.${project.version}-${env.BUILD_NUMBER}</Bundle-Version>
 
-						<!-- Include de.metas.printing.esb.api in our bundle. Don't make it 
-							an extra bundle, unless there is *another* OSGI-bundle such as esb.printing 
-							that also needs de.metas.printing.esb.api -->
+						<!-- include poi and commons-logging in this bundle, because we can't deploy them into the OSGI-container 
+							regarding loggins, also see https://cwiki.apache.org/confluence/display/commons/CommonsOsgi
+						-->
 						<Private-Package>
 							org.apache.poi.*,
+							org.apache.commons.logging.*
 							{local-packages}
 						</Private-Package>
 
