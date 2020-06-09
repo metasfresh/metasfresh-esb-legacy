@@ -123,6 +123,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
 		<!-- needed by smooks -->
 		<dependency>
 			<artifactId>commons-logging</artifactId>
@@ -223,7 +224,7 @@
 						-->
 						<Private-Package>
 							org.apache.poi.*,
-							org.apache.commons.logging.*
+							org.apache.commons.logging.*,
 							{local-packages}
 						</Private-Package>
 
