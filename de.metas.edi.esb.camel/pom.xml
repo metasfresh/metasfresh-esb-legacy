@@ -220,13 +220,15 @@
 						<Bundle-Version>0.0.0.${project.version}-${env.BUILD_NUMBER}</Bundle-Version>
 
 						<!-- include poi and commons-logging in this bundle, because we can't deploy them into the OSGI-container 
-							regarding loggins, also see https://cwiki.apache.org/confluence/display/commons/CommonsOsgi
+							regarding logging, also see https://cwiki.apache.org/confluence/display/commons/CommonsOsgi
 						-->
 						<Private-Package>
 							org.apache.poi.*,
 							org.apache.commons.logging.*,
 							{local-packages}
 						</Private-Package>
+
+						<Import-Package>!org.apache.log,*</Import-Package>
 
 					</instructions>
 				</configuration>
