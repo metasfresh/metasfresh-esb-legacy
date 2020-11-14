@@ -35,13 +35,10 @@ import org.milyn.smooks.camel.dataformat.SmooksDataFormat;
 
 import de.metas.edi.esb.bean.desadv.AbstractEDIDesadvCommonBean;
 import de.metas.edi.esb.bean.desadv.EDIDesadvAggregateBean;
-import de.metas.edi.esb.bean.desadv.EDIDesadvSingleBean;
 import de.metas.edi.esb.commons.Constants;
 import de.metas.edi.esb.commons.Util;
 import de.metas.edi.esb.jaxb.EDIDesadvFeedbackType;
 import de.metas.edi.esb.jaxb.EDIExpDesadvType;
-import de.metas.edi.esb.jaxb.EDIExpMInOutType;
-import de.metas.edi.esb.jaxb.EDIInOutFeedbackType;
 import de.metas.edi.esb.processor.feedback.EDIXmlSuccessFeedbackProcessor;
 import de.metas.edi.esb.processor.feedback.helper.EDIXmlFeedbackHelper;
 import de.metas.edi.esb.route.AbstractEDIRoute;
@@ -88,38 +85,6 @@ public class EDIDesadvRoute extends AbstractEDIRoute
 
 		final String isTest = Util.resolvePropertyPlaceholders(getContext(), EDIDesadvRoute.EDI_DESADV_IS_TEST);
 
-		from(EDIDesadvRoute.EP_EDI_DESADV_SINGLE_CONSUMER)
-				.routeId(ROUTE_ID_SINGLE)
-
-				.log(LoggingLevel.INFO, "EDI: Setting defaults as exchange properties...")
-				.setProperty(EDIDesadvRoute.EDI_DESADV_IS_TEST).constant(isTest)
-
-				//
-				// Single route (used for pivoting feedback)
-				.setProperty(EDIDesadvRoute.EDI_DESADV_IS_AGGREGATE).constant(false)
-
-				.log(LoggingLevel.INFO, "EDI: Setting EDI feedback headers...")
-				.process(new Processor()
-				{
-					@Override
-					public void process(final Exchange exchange)
-					{
-						// i'm sure that there are better ways, but we want the EDIFeedbackRoute to identify that the error is coming from *this* route.
-						exchange.getIn().setHeader(EDIXmlFeedbackHelper.HEADER_ROUTE_ID, ROUTE_ID_SINGLE);
-
-						final EDIExpMInOutType xmlInOut = exchange.getIn().getBody(EDIExpMInOutType.class); // throw exceptions if mandatory fields are missing
-
-						exchange.getIn().setHeader(EDIXmlFeedbackHelper.HEADER_ADClientValueAttr, xmlInOut.getADClientValueAttr());
-						exchange.getIn().setHeader(EDIXmlFeedbackHelper.HEADER_RecordID, xmlInOut.getMInOutID());
-					}
-				})
-
-				.log(LoggingLevel.INFO, "EDI: Converting XML Java Object -> EDI Java Object...")
-				.bean(EDIDesadvSingleBean.class, AbstractEDIDesadvCommonBean.METHOD_createEDIData)
-				//
-				// Send to common route
-				.to(EDIDesadvRoute.EP_EDI_DESADV_COMMON_CONSUMER);
-
 		from(EDIDesadvRoute.EP_EDI_DESADV_AGGREGATE_CONSUMER)
 				.routeId(ROUTE_ID_AGGREGATE)
 
@@ -163,15 +128,8 @@ public class EDIDesadvRoute extends AbstractEDIRoute
 				.to(EDIDesadvRoute.EP_EDI_FILE_DESADV)
 
 				.log(LoggingLevel.INFO, "EDI: Creating ADempiere feedback XML Java Object...")
-				//
-				// @formatter:off
-				.choice()
-					.when(exchangeProperty(EDI_DESADV_IS_AGGREGATE).isEqualTo(false))
-						.process(new EDIXmlSuccessFeedbackProcessor<EDIInOutFeedbackType>(EDIInOutFeedbackType.class, EDIDesadvRoute.EDIInOutFeedback_QNAME, EDIDesadvRoute.METHOD_setMInOutID))
-					.otherwise()
-						.process(new EDIXmlSuccessFeedbackProcessor<EDIDesadvFeedbackType>(EDIDesadvFeedbackType.class, EDIDesadvRoute.EDIDesadvFeedback_QNAME, EDIDesadvRoute.METHOD_setEDIDesadvID))
-				.end()
-				// @formatter:on
+
+				.process(new EDIXmlSuccessFeedbackProcessor<EDIDesadvFeedbackType>(EDIDesadvFeedbackType.class, EDIDesadvRoute.EDIDesadvFeedback_QNAME, EDIDesadvRoute.METHOD_setEDIDesadvID))
 
 				.log(LoggingLevel.INFO, "EDI: Marshalling XML Java Object feedback -> XML document...")
 				.marshal(jaxb)

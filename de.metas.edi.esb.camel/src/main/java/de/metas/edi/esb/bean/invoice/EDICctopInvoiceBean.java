@@ -10,12 +10,12 @@ package de.metas.edi.esb.bean.invoice;
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
@@ -71,7 +71,7 @@ public class EDICctopInvoiceBean
 	 * <li>IN: {@link EDICctopInvoicVType}</li>
 	 * <li>OUT: {@link CctopInvoice}</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param exchange
 	 */
 	public void createEDIData(final Exchange exchange)
@@ -255,7 +255,7 @@ public class EDICctopInvoiceBean
 	{
 		return str != null && !str.trim().isEmpty();
 	}
-	
+
 	private List<Cctop119V> createCctop119VList(final List<EDICctop119VType> xmlCctop119VList, final DecimalFormat decimalFormat)
 	{
 		final List<Cctop119V> cctop119VList = new ArrayList<Cctop119V>();
@@ -383,7 +383,7 @@ public class EDICctopInvoiceBean
 
 			final CctopInvoice500V cctopInvoice500V = new CctopInvoice500V();
 			cctopInvoice500V.setcInvoiceID(formatNumber(xmlCctopInvoic500V.getCInvoiceID(), decimalFormat));
-			cctopInvoice500V.setEancomUom(xmlCctopInvoic500V.getEancomUom());
+			cctopInvoice500V.setEancomUom(xmlCctopInvoic500V.getEanComUOM());
 			cctopInvoice500V.setIsoCode(xmlCctopInvoic500V.getISOCode());
 			cctopInvoice500V.setLine(formatNumber(xmlCctopInvoic500V.getLine(), decimalFormat));
 			cctopInvoice500V.setLineNetAmt(formatNumber(xmlCctopInvoic500V.getLineNetAmt(), decimalFormat));
