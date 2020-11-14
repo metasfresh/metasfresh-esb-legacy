@@ -376,9 +376,9 @@ public class EDICctopInvoiceBean
 
 		for (final EDICctopInvoic500VType xmlCctopInvoic500V : xmlCctopInvoic500VList)
 		{
-			if (isEmpty(xmlCctopInvoic500V.getUPC()))
+			if (isEmpty(xmlCctopInvoic500V.getEANCU()))
 			{
-				throw new RuntimeCamelException(xmlCctopInvoic500V + " must have a UPC");
+				throw new RuntimeCamelException(xmlCctopInvoic500V + " must have an EANCU");
 			}
 
 			final CctopInvoice500V cctopInvoice500V = new CctopInvoice500V();
@@ -394,7 +394,7 @@ public class EDICctopInvoiceBean
 			cctopInvoice500V.setQtyInvoiced(formatNumber(xmlCctopInvoic500V.getQtyInvoiced(), decimalFormat));
 			cctopInvoice500V.setRate(formatNumber(xmlCctopInvoic500V.getRate(), decimalFormat));
 			cctopInvoice500V.setTaxfree(Util.getADBooleanString(xmlCctopInvoic500V.getTaxfree()));
-			cctopInvoice500V.setUpc(xmlCctopInvoic500V.getUPC());
+			cctopInvoice500V.setUpc(xmlCctopInvoic500V.getEANCU());
 			cctopInvoice500V.setValue(xmlCctopInvoic500V.getValue());
 			cctopInvoice500V.setVendorProductNo(xmlCctopInvoic500V.getVendorProductNo());
 			cctopInvoice500V.setProductDescription(xmlCctopInvoic500V.getProductDescription());
