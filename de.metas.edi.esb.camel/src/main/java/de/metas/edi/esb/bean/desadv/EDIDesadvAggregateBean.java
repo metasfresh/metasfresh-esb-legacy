@@ -287,24 +287,45 @@ public class EDIDesadvAggregateBean extends AbstractEDIDesadvCommonBean
 	}
 
 	private P060 createP060(
-			@NonNull final EDIExpDesadvType xmlDesadv, 
+			@NonNull final EDIExpDesadvType xmlDesadv,
 			final EDIExpDesadvLinePackType pack,
-			@NonNull final DecimalFormat decimalFormat, 
+			@NonNull final DecimalFormat decimalFormat,
 			final int cpsCounter)
 	{
 		final P060 p060 = new P060();
 
-		p060.setcPScounter(formatNumber(BigInteger.valueOf(cpsCounter), decimalFormat));
+		p060.setCPScounter(formatNumber(BigInteger.valueOf(cpsCounter), decimalFormat));
 		p060.setInnerOuterCode(voidString);
 		p060.setMessageNo(formatNumber(xmlDesadv.getSequenceNoAttr(), decimalFormat));
 
 		// p060.setPalettQTY(xmlInOutLine.getCOrderLineID().getQtyItemCapacity()); // leave empty for now
-		p060.setPalettTyp(voidString); // empty in sample - leave empty for now (see wiki)
+
+		final PackagingCode packagingCode = PackagingCode.ofNullableCode(pack.getMHUPackagingCodeLUText());
+		if (packagingCode != null)
+		{
+			final String compudataPackagingCode;
+			switch (packagingCode)
+			{
+				case ISO1:
+					compudataPackagingCode = "201";
+					break;
+				case ISO2:
+					compudataPackagingCode = "200";
+					break;
+				case ONEW:
+					compudataPackagingCode = "08";
+					break;
+				default:
+					compudataPackagingCode = voidString;
+			}
+			p060.setPalettTyp(compudataPackagingCode);
+		}
 
 		p060.setPartner(xmlDesadv.getCBPartnerID().getEdiRecipientGLN());
 
 		final String sscc18Value = Util.removePrecedingZeros(pack == null ? "" : pack.getIPASSCC18());
 		p060.setNormalSSCC(sscc18Value);
+		p060.setGrainNummer(pack.getGTINLUPackingMaterial());
 
 		// p060.setBruttogewicht(xmlInOutLine.getMProductID().getWeight()); // leave empty for now
 		// p060.setVolumen(xmlInOutLine.getMProductID().getVolume()); // leave empty for now
@@ -313,7 +334,7 @@ public class EDIDesadvAggregateBean extends AbstractEDIDesadvCommonBean
 	}
 
 	private P100 createP100(
-			final EDIExpDesadvType xmlDesadv, 
+			final EDIExpDesadvType xmlDesadv,
 			@NonNull final LineAndPack lineAndPack,
 			final DecimalFormat decimalFormat)
 	{
@@ -327,7 +348,7 @@ public class EDIDesadvAggregateBean extends AbstractEDIDesadvCommonBean
 		// p100.setBestBeforeDate(EDIDesadvBean.voidDate); // leave empty
 		p100.setChargenNo(voidString);
 
-		p100.setcUperTU(
+		p100.setCUperTU(
 				formatNumber(pack.getQtyCU(), // might be OK: returning our internal CUperTU-Qty, as we also return or CU-Qtys
 						decimalFormat));
 
@@ -380,7 +401,7 @@ public class EDIDesadvAggregateBean extends AbstractEDIDesadvCommonBean
 		p100.setEanArtNo(xmlDesadvLine.getUPC());
 		p100.setBuyerArtNo(xmlDesadvLine.getProductNo());
 		p100.setArtDescription(xmlDesadvLine.getProductDescription() == null ? voidString : xmlDesadvLine.getProductDescription());
-
+		p100.setGrainItemNummer(pack.getGTINTUPackingMaterial());
 		return p100;
 	}
 
