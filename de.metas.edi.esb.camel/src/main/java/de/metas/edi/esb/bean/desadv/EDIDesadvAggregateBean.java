@@ -293,7 +293,7 @@ public class EDIDesadvAggregateBean extends AbstractEDIDesadvCommonBean
 	{
 		final P060 p060 = new P060();
 
-		p060.setCPScounter(formatNumber(BigInteger.valueOf(cpsCounter), decimalFormat));
+		p060.setcPScounter(formatNumber(BigInteger.valueOf(cpsCounter), decimalFormat));
 		p060.setInnerOuterCode(voidString);
 		p060.setMessageNo(formatNumber(xmlDesadv.getSequenceNoAttr(), decimalFormat));
 
@@ -347,7 +347,7 @@ public class EDIDesadvAggregateBean extends AbstractEDIDesadvCommonBean
 		// p100.setBestBeforeDate(EDIDesadvBean.voidDate); // leave empty
 		p100.setChargenNo(voidString);
 
-		p100.setCUperTU(
+		p100.setcUperTU(
 				formatNumber(pack.getQtyCU(), // might be OK: returning our internal CUperTU-Qty, as we also return or CU-Qtys
 						decimalFormat));
 
