@@ -22,6 +22,7 @@
 
 package de.metas.edi.esb.bean.desadv;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -79,5 +80,12 @@ public enum PackagingCode
 		return type != null ? type.getCode() : null;
 	}
 
-	private static final ImmutableMap<String, PackagingCode> typesByCode = Maps.uniqueIndex(Arrays.asList(values()), PackagingCode::getCode);
+	private static final ImmutableMap<String, PackagingCode> typesByCode = Maps.uniqueIndex(Arrays.asList(values()), new Function<PackagingCode, String>()
+	{
+		@Override
+		public String apply(PackagingCode packagingCode)
+		{
+			return packagingCode.getCode();
+		}
+	});
 }
