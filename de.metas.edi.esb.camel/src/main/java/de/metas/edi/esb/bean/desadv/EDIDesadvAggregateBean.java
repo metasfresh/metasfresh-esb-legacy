@@ -13,15 +13,14 @@ package de.metas.edi.esb.bean.desadv;
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public
- * License along with this program.  If not, see
+ * License along with this program. If not, see
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
-
 
 import static de.metas.edi.esb.commons.Util.formatNumber;
 import static de.metas.edi.esb.commons.Util.toDate;
@@ -167,9 +166,9 @@ public class EDIDesadvAggregateBean extends AbstractEDIDesadvCommonBean
 
 			validateObject(xmlDesadvLine.getQtyEntered(), "@FillMandatory@ @EDI_DesadvLine_ID@=" + xmlDesadvLine.getLine() + " @QtyEntered@");
 
-			validateString(xmlDesadvLine.getProductNo(), "@FillMandatory@ ProductNo in @EDI_DesadvLine_ID@ " + xmlDesadvLine.getLine());
-			validateString(xmlDesadvLine.getUPC(), "@FillMandatory@ UPC in @EDI_DesadvLine_ID@ " + xmlDesadvLine.getLine());
-			validateString(xmlDesadvLine.getProductDescription(), "@FillMandatory@ ProductDescription in @EDI_DesadvLine_ID@ " + xmlDesadvLine.getLine());
+			validateString(xmlDesadvLine.getProductNo(), "@FillMandatory@ @EDI_DesadvLine_ID@ " + xmlDesadvLine.getLine() + " @ProductNo@");
+			validateString(xmlDesadvLine.getEANCU(), "@FillMandatory@ @EDI_DesadvLine_ID@ " + xmlDesadvLine.getLine() + " @EANCU@");
+			validateString(xmlDesadvLine.getProductDescription(), "@FillMandatory@ @EDI_DesadvLine_ID@ " + xmlDesadvLine.getLine() + " @ProductDescription@");
 		}
 
 		return xmlDesadv;
@@ -378,7 +377,7 @@ public class EDIDesadvAggregateBean extends AbstractEDIDesadvCommonBean
 		p100.setDetailPrice(voidString);
 		p100.setUnitCode(voidString);
 		// p100.setDiffDeliveryDate(EDIDesadvBean.voidDate);
-		p100.setEanTU(voidString);
+		p100.setEanTU(xmlDesadvLine.getEANTU());
 		p100.setMessageNo(formatNumber(xmlDesadv.getSequenceNoAttr(), decimalFormat));
 		// 05768
 		if (xmlDesadv.getPOReference() != null && !xmlDesadv.getPOReference().isEmpty())
@@ -398,7 +397,7 @@ public class EDIDesadvAggregateBean extends AbstractEDIDesadvCommonBean
 		p100.setStoreNumber(voidString);
 		p100.setSupplierArtNo(voidString);
 
-		p100.setEanArtNo(xmlDesadvLine.getUPC());
+		p100.setEanArtNo(xmlDesadvLine.getEANCU());
 		p100.setBuyerArtNo(xmlDesadvLine.getProductNo());
 		p100.setArtDescription(xmlDesadvLine.getProductDescription() == null ? voidString : xmlDesadvLine.getProductDescription());
 		p100.setGrainItemNummer(pack.getGTINTUPackingMaterial());
