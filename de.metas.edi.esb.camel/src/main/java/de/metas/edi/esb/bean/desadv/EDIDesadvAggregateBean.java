@@ -315,7 +315,7 @@ public class EDIDesadvAggregateBean extends AbstractEDIDesadvCommonBean
 					compudataPackagingCode = "08";
 					break;
 				default:
-					compudataPackagingCode = voidString;
+					compudataPackagingCode = "201"; // assume "EUR-palette" by default
 			}
 			p060.setPalettTyp(compudataPackagingCode);
 		}
